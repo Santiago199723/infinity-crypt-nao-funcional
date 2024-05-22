@@ -280,16 +280,15 @@ background-attachment: fixed;
             }, intervalTime);
     
             setTimeout(function() {
-                clearInterval(wideBoxInterval);
-                wideBoxIndex = 0;
-    
-                var name = names[Math.floor(Math.random() * names.length)];
-                document.getElementById("activeResult").textContent = name;
+            clearInterval(wideBoxInterval);
+            wideBoxIndex = 0;
 
-                 // Gera um número aleatório entre 1 e 2 para representar M1 e M5, respectivamente
-                var timeframeRandom = Math.floor(Math.random() * 2) + 1;
-                var timeResultText = timeframeRandom === 1 ? "M1" : "M5";
-                document.getElementById("timeResult").textContent = timeResultText;
+            var name = names[Math.floor(Math.random() * names.length)];
+            document.getElementById("activeResult").textContent = name;
+
+            // Define diretamente o timeResultText como "M1"
+            var timeResultText = "M1";
+            document.getElementById("timeResult").textContent = timeResultText;
     
                 // Lógica para exibir os sinais de acordo com o intervalo de tempo selecionado
     var order = Math.random() < 0.5 ? "COMPRA" : "VENDA";
