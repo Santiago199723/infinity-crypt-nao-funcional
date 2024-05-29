@@ -164,7 +164,7 @@
                                 <td id="finalBalance">- Saldo -<br/><b>R$0.00</b><br/>- Meta esperada -<br/><b>R$0.00 (0.00%)</b></td>
                                 <td id="cicleStatus">Erros Permitidos:<br/>0/0 Erros"</td>
                                 <td id="cicleStatus2">Acertos: 0.00%<br/>0/0 Acertos</td>
-                                <td><input onclick="Sheet_Update(1, true)" id="inputWins" type="button" placeholder="2" value="LIMPAR TUDO" style="background-color: #58b188; border-bottom: 3px solid #310202; padding: 16px 0px;!important; width: 100%;" /></td>
+                                <td><input onclick="Sheet_Update(1, true)" id="inputWins" type="button" placeholder="2" value="LIMPAR TUDO" style="background-color: #58b188; border-bottom: 3px solid #310202; padding: 16px 10px; width: 100%;" /></td>
                                 <!-- <td><input id="inputPayoff" type="button" placeholder="1.8" value="SALVAR CICLO" style="background-color: #56db31; border-bottom: 3px solid #56db31;"/></td> -->
                             </tr>
                         </tbody>
@@ -181,7 +181,7 @@
                             <td></td>
                         </tr>
                         <tr>
-                            <td>W &nbsp;/&nbsp; L<br/><input type="radio" name="resRadio" value="1" /> &nbsp;&nbsp;&nbsp;<input type="radio" name="resRadio" value="0" /></td>
+                            <td>WIN &nbsp;/&nbsp; L<br/><input type="radio" name="resRadio" value="1" /> &nbsp;&nbsp;&nbsp;<input type="radio" name="resRadio" value="0" /></td>
                             <td><span id="op01-lot-size"></span></td>
                             <td></td>
                             <td></td>
@@ -357,9 +357,9 @@
 
             </style>
             <script>
-                const userID = '1912',
-                    userSSID = 'KeomVLxKOBiRyqLRX7IHdgVVlOdifoE046S51gW6vI4mjXU50yh1HLfEd2kOVJ48';
-                
+                 const userID = '3314',
+                    userSSID = 'F2K3EjdSC7YRLTsATW8aOPQ8A9NqjN3Y9qn7jaZhdcGFJakRniSx9bEgiKs67TpV';
+
                 var updateRequest = 0, loadingTimeout = 0;
                 var loadingDiv = document.getElementById('loadingDiv');
                 var inputBalance = document.getElementById('inputBalance'),
@@ -378,7 +378,7 @@
 
                 function Socket_Create() {
                     socket = null;
-                    socket = new WebSocket('wss://ws1.estrategiastarget.com:8085');
+                    socket = new WebSocket('wss://ws2.estrategiastarget.com:8085');
                     socket.addEventListener('open', function (event) {
                         clearInterval(socketInterval);
                         Sheet_Update(0);
@@ -403,7 +403,7 @@
                                 lossCount = 0,
                                 winsCount = 0;
                             let lastRow = "", lastBalance = 0, profitTarget = parseFloat(data['data']['profitTarget']);
-                            
+
                             let cicleDone = false;
                             for(let i = 0; i < parseInt(inputTotalTrades.value); i++) {
                                 if(i < tradesData['lots'].length) {
@@ -411,24 +411,24 @@
                                     if(tradesData['profit'][i] == "") tradesData['profit'][i] = 0;
                                     if(tradesData['balance'][i] == "") tradesData['balance'][i] = 0;
                                     if(document.getElementById(`op-${i}-lotSize`)) {
-                                        document.getElementById(`op-${i}-lotSize`).innerHTML = "R$ "+parseFloat(tradesData['lots'][i]).toFixed(2);
-                                        document.getElementById(`op-${i}-profit`).innerHTML = (parseFloat(tradesData['profit'][i]) > 0 ? "+" : "")+ "R$ "+parseFloat(tradesData['profit'][i]).toFixed(2)+" ("+(100 * parseFloat(tradesData['profit'][i]) / parseFloat(inputBalance.value)).toFixed(2)+" %)";
-                                        
+                                        document.getElementById(`op-${i}-lotSize`).innerHTML = "$ "+parseFloat(tradesData['lots'][i]).toFixed(2);
+                                        document.getElementById(`op-${i}-profit`).innerHTML = (parseFloat(tradesData['profit'][i]) > 0 ? "+" : "")+ "$ "+parseFloat(tradesData['profit'][i]).toFixed(2)+" ("+(100 * parseFloat(tradesData['profit'][i]) / parseFloat(inputBalance.value)).toFixed(2)+" %)";
+
 
                                         const selectedRadio = document.querySelector(`input[name=op-${i}-resRadio]:checked`);
                                         if(selectedRadio) {
                                             if(parseFloat(tradesData['profit'][i]) == 0) {
                                                 lossCount++;
-                                                document.getElementById(`op-${i}-profit`).style.color = 'red';
+                                                document.getElementById(`op-${i}-profit`).style.color = 'white';
                                             } else if(parseFloat(tradesData['profit'][i]) > 0) {
                                                 winsCount++;
-                                                document.getElementById(`op-${i}-profit`).style.color = '#56db31';
+                                                document.getElementById(`op-${i}-profit`).style.color = '#14B99C';
                                             }
                                             if(parseFloat(tradesData['balance'][i]) > inputBalance.value) {
-                                                document.getElementById(`op-${i}-balance`).style.color = '#56db31';
+                                                document.getElementById(`op-${i}-balance`).style.color = '#14B99C';
                                             } else if(parseFloat(tradesData['balance'][i]) < inputBalance.value) {
-                                                document.getElementById(`op-${i}-balance`).style.color = 'red';
-                                            
+                                                document.getElementById(`op-${i}-balance`).style.color = 'white';
+
                                             }
 
                                             if(lossCount > lossAllowed) {
@@ -436,16 +436,16 @@
                                                 cicleDone = true;
                                                 cicleStatus.innerHTML = "DERROTA";
                                                 cicleStatus2.innerHTML = "CICLO ENCERRADO!";
-                                                alert("     CICLO ENCERRADO:     \n       DERROTA       \n\n😪😞Eita, você atingiu o limite de erros permitidos! Respeite o seu gerenciamento que vai dar certo!\n\nPor favor, inicie um novo ciclo.");
+                                                alert("     CICLO ENCERRADO:     \n       DERROTA       \n\nVocê atingiu o limite de erros permitidos!\n\nPor favor, inicie um novo ciclo.");
                                                 continue;
                                             } else if(winsCount >= parseInt(inputWins.value)) {
                                                 lastBalance = inputBalance.value * (1 + (profitTarget / 100));
                                                 cicleDone = true;
                                                 cicleStatus.innerHTML = "VITÓRIA!";
                                                 cicleStatus2.innerHTML = "CICLO ENCERRADO!";
-                                                alert("     CICLO ENCERRADO:     \n       VITÓRIA!       \n\n 👏👏 Parabéns, trader!! Você atingiu o limite de acertos! 🚀🏆\n\nPor favor, inicie um novo ciclo.");
+                                                alert("     CICLO ENCERRADO:     \n       VITÓRIA!       \n\nParabéns!! Você atingiu o limite de acertos!\n\nPor favor, inicie um novo ciclo.");
                                                 continue;
-                                            } 
+                                            }
 
 
                                             var nextRow = document.getElementById(`op-${i}`).nextElementSibling;
@@ -460,17 +460,17 @@
                                                 }
                                             }
                                         }
-                                        document.getElementById(`op-${i}-balance`).innerHTML = "R$ "+parseFloat((winsCount + lossCount) > 0 ? tradesData['balance'][i + 1] : inputBalance.value).toFixed(2);
+                                        document.getElementById(`op-${i}-balance`).innerHTML = "$ "+parseFloat((winsCount + lossCount) > 0 ? tradesData['balance'][i + 1] : inputBalance.value).toFixed(2);
                                         if(winsCount + lossCount > 0) lastBalance = parseFloat(tradesData['balance'][i]); else lastBalance = parseFloat(inputBalance.value);
                                     }
                                 } else {
                                     if(cicleDone) {
                                         document.getElementById(`op-${i}`).style.opacity = 0.5;
                                         document.getElementById(`op-${i}`).style.background = "rgba(22,22,22,.7)";
-                                        document.getElementById(`op-${i}-lotSize`).innerHTML = "R$ 0.00";
-                                        document.getElementById(`op-${i}-profit`).innerHTML = "R$ 0.00";
+                                        document.getElementById(`op-${i}-lotSize`).innerHTML = "$ 0.00";
+                                        document.getElementById(`op-${i}-profit`).innerHTML = "$ 0.00";
                                         document.getElementById(`op-${i}-profit`).style.color = 'white';
-                                        document.getElementById(`op-${i}-balance`).innerHTML = "R$ 0.00";
+                                        document.getElementById(`op-${i}-balance`).innerHTML = "$ 0.00";
                                         document.getElementById(`op-${i}-balance`).style.color = 'white';
 
                                         var line = document.getElementById(`op-${i}`);
@@ -492,8 +492,8 @@
                                 cicleStatus.innerHTML = "Erros Permitidos:<br/>"+lossCount+"/"+lossAllowed+" Erros";
                                 cicleStatus2.innerHTML = "Acertos: <b>"+(100 * (inputWins.value / inputTotalTrades.value)).toFixed(2)+"</b>%<br/>"+winsCount+"/"+inputWins.value+" Acertos";
                             }
-                            finalBalance.innerHTML = "- Saldo- <br/><b>R$ "+(winsCount+lossCount == 0 ? parseFloat(inputBalance.value) : lastBalance).toFixed(2)+"</b><br/>- Projeção Atual -<br/><b style=\"color: #58b188;\">R$ "+(parseFloat(inputBalance.value) * (1 + (profitTarget / 100))).toFixed(2)+" ("+(profitTarget).toFixed(2)+" %)</b>";
-                            
+                            finalBalance.innerHTML = "- Saldo- <br/><b>$ "+(winsCount+lossCount == 0 ? parseFloat(inputBalance.value) : lastBalance).toFixed(2)+"</b><br/>- Projeção -<br/><b style=\"color: #14B99C;\">$ "+(parseFloat(inputBalance.value) * (1 + (profitTarget / 100))).toFixed(2)+" ("+(profitTarget).toFixed(2)+" %)</b>";
+
                             if(cicleDone) {
                                 if(lastRow) {
                                     let nextRow = lastRow.nextElementSibling;
@@ -520,7 +520,7 @@
                     });
                 }
                 Socket_Create();
-                
+
 
 
                 // Clear sessionId cookie
@@ -547,7 +547,7 @@
                     }
                 }
 
-                
+
                 async function Sheet_Update(mode = 0, updateBoth = false) {
                     if(mode == 0) {
                         loadingDiv.style.display = 'block';
@@ -560,7 +560,7 @@
                         for(let i = 0; i < tradesElements.length; i++) {
                             if(tradesElements[i].checked) tradesData.push(tradesElements[i].value);
                         }
-                        
+
 
                         let sheetData = {
                             balance: inputBalance.value,
@@ -574,16 +574,16 @@
                         socket.send(JSON.stringify({ type: 'update', userID: userID, data: sheetData }));
                         updateRequest = 0;
                     }  else if(mode == 1) {
-                        let totalTrades = document.getElementById('inputTotalTrades').value; 
+                        let totalTrades = document.getElementById('inputTotalTrades').value;
                         let dataTable = document.getElementById('dataTable');
 
                         //  atualizar tabela mantendo valores antigos
                         dataTable.innerHTML = `
                             <tr>
                                 <td>Resultado</td>
-                                <td>Entradas</td>
+                                <td>Lote</td>
                                 <td>Retorno</td>
-                                <td>Saldo do Ciclo</td>
+                                <td>Saldo Ciclo</td>
                             </tr>
                         `;
 
@@ -593,15 +593,15 @@
                             row.setAttribute('id', `op-${i}`);
                             if(i > 0) {
                                 row.style.opacity = 0.5;
-                                row.style.background = "";
+                                row.style.background = "rgba(22,22,22,.7)";
                                 radioOff = "disabled";
                             }
 
                             row.innerHTML = `
-                                <td>Win &nbsp;/&nbsp; Loss<br/><input type="radio" class="resRadio" name="op-${i}-resRadio" value="1" onclick="Sheet_Update(0)" ${radioOff} /> &nbsp;&nbsp;&nbsp;<input type="radio" class="resRadio" name="op-${i}-resRadio" value="0" onclick="Sheet_Update(0)" ${radioOff} /></td>
-                                <td><span id="op-${i}-lotSize">R$ 0.00</span></td>
-                                <td><span id="op-${i}-profit">R$ 0.00</span></td>
-                                <td><span id="op-${i}-balance">R$ 0.00</span></td>
+                                <td>WIN &nbsp;/&nbsp; LOSS<br/><input type="radio" class="resRadio" name="op-${i}-resRadio" value="1" onclick="Sheet_Update(0)" ${radioOff} /> &nbsp;&nbsp;&nbsp;<input type="radio" class="resRadio" name="op-${i}-resRadio" value="0" onclick="Sheet_Update(0)" ${radioOff} /></td>
+                                <td><span id="op-${i}-lotSize">$ 0.00</span></td>
+                                <td><span id="op-${i}-profit">$ 0.00</span></td>
+                                <td><span id="op-${i}-balance">$ 0.00</span></td>
                             `;
                             dataTable.appendChild(row);
                         }
@@ -616,58 +616,56 @@
                 }
 
                 var bannerLoopInterval = 0, bannerLoopTimeout = 0, bannerLoopTime = 10000;
+                function Util_ImageUpdate(mode = 0) {
+                    if(mode == 0) {
+                        document.getElementById('bannersDiv').style.height = (document.documentElement.clientHeight - 100 - document.getElementById('tablesDiv').offsetHeight)+"px";
+                        let buttonsDiv = document.getElementById('bannersDiv').querySelectorAll('.buttonDiv');
+                        for(let i = 0; i < buttonsDiv.length; i++) {
+                            // buttonsDiv[i].style.height = document.getElementById('firstBanner').offsetHeight+"px";
+                        }
 
-function Util_ImageUpdate(mode = 0) {
-    if(mode == 0) {
-        document.getElementById('bannersDiv').style.height = (document.documentElement.clientHeight - 100 - document.getElementById('tablesDiv').offsetHeight)+"px";
-        let buttonsDiv = document.getElementById('bannersDiv').querySelectorAll('.buttonDiv');
-        for(let i = 0; i < buttonsDiv.length; i++) {
-            // buttonsDiv[i].style.height = document.getElementById('firstBanner').offsetHeight+"px";
-        }
-
-        clearInterval(bannerLoopInterval);
-        bannerLoopInterval = setInterval(() => {
-            let banners = document.getElementById('bannersDiv').querySelectorAll('img');
-            let activeBanner = document.getElementById('bannersDiv').querySelector('img.active');
-            let nextBanner = activeBanner.nextElementSibling;
-            if(!nextBanner || nextBanner.tagName !== 'IMG') nextBanner = banners[0];
-            
-            nextBanner.classList.add('active');
-            activeBanner.classList.add('inactive');
-            activeBanner.classList.remove('active');
-            
-            bannerLoopTimeout = setTimeout(() => {
-                activeBanner.style.transition = '0s';
-                activeBanner.classList.remove('inactive');
-                setTimeout(() => {
-                    //removing transition property
-                    activeBanner.style.transition = '';
-                }, 1000);
-            }, 2000);
-        }, bannerLoopTime);
-    } else {
-        clearTimeout(bannerLoopTimeout);
-        bannerLoopTime = 10000;
-        var bannerList = document.getElementById('bannersDiv').querySelectorAll('img');
-        if(mode == 1) {
-            let firstValue = bannerList[0].getAttribute('src');
-            for(let i = 0; i < bannerList.length - 1; i++) {
-                bannerList[i].setAttribute('src', bannerList[i + 1].getAttribute('src'));
-            }
-            bannerList[bannerList.length - 1].setAttribute('src', firstValue);
-        } else {
-            let lastValue = bannerList[bannerList.length - 1].getAttribute('src');
-            for(let i = bannerList.length - 1; i > 0; i--) {
-                bannerList[i].setAttribute('src', bannerList[i - 1].getAttribute('src'));
-            }
-            bannerList[0].setAttribute('src', lastValue);
-        }
-    }
-}
-
-// Chame a função para iniciar a animação do banner automaticamente
-Util_ImageUpdate(0);
-
+                        clearInterval(bannerLoopInterval);
+                        bannerLoopInterval = setInterval(() => {
+                            if(bannerLoopTime <= 0) {
+                                let banners = document.getElementById('bannersDiv').querySelectorAll('img');
+                                let activeBanner = document.getElementById('bannersDiv').querySelector('img.active');
+                                let nextBanner = activeBanner.nextElementSibling;
+                                if(nextBanner.tagName != 'IMG' || !nextBanner) nextBanner = banners[0];
+                                // console.log(nextBanner);
+                                nextBanner.classList.add('active');
+                                activeBanner.classList.add('inactive');
+                                activeBanner.classList.remove('active');
+                                bannerLoopTimeout = setTimeout(() => {
+                                    activeBanner.style.transition = '0s';
+                                    activeBanner.classList.remove('inactive');
+                                    setTimeout(() => {
+                                        //removing transition property
+                                        activeBanner.style.transition = '';
+                                    }, 1000);
+                                }, 2000);
+                                bannerLoopTime = 10000;
+                            }
+                            bannerLoopTime -= 100;
+                        }, 100);
+                    } else {
+                        clearTimeout(bannerLoopTimeout);
+                        bannerLoopTime = 10000;
+                        var bannerList = document.getElementById('bannersDiv').querySelectorAll('img');
+                        if(mode == 1) {
+                            let firstValue = bannerList[0].getAttribute('src');
+                            for(let i = 0; i < bannerList.length - 1; i++) {
+                                bannerList[i].setAttribute('src', bannerList[i + 1].getAttribute('src'));
+                            }
+                            bannerList[bannerList.length - 1].setAttribute('src', firstValue);
+                        } else {
+                            let lastValue = bannerList[bannerList.length - 1].getAttribute('src');
+                            for(let i = bannerList.length - 1; i > 0; i--) {
+                                bannerList[i].setAttribute('src', bannerList[i - 1].getAttribute('src'));
+                            }
+                            bannerList[0].setAttribute('src', lastValue);
+                        }
+                    }
+                }
 
                 function Util_NewTab(url) {
                     window.open(url, '_blank');
@@ -702,7 +700,7 @@ Util_ImageUpdate(0);
                                 input.value = input.getAttribute('oldValue');
                                 return;
                             }
-                            
+
                             if(input.getAttribute('id') == "inputTotalTrades") {
                                 if(input.value > 25 || input.value < 2) {
                                     alert("Valor inválido: "+input.value+".\n\nO número de operações deve ser entre 2 e 25!");
@@ -720,7 +718,7 @@ Util_ImageUpdate(0);
                 document.getElementById('logoutButton').addEventListener('click', User_Logout);
                 document.addEventListener('DOMContentLoaded', () => { Sheet_Update(1, true); User_GetData(); Util_ImageUpdate(); });
                 //resize
-                document.addEventListener('resize', () => { Util_ImageUpdate(); });
+                window.addEventListener('resize', () => { Util_ImageUpdate(); });
             </script>
                 </div>
         <img id="logo" src="Home1.png">
